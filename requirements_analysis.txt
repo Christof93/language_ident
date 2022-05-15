@@ -1,0 +1,9 @@
+numpy
+tqdm
+datasets
+ipykernel
+conllu
+langid
+langdetect
+sklearn
+matplotlib
