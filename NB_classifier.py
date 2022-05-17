@@ -20,18 +20,21 @@ class MNB_classfier():
 
         self._feature_freqs = [np.ones(vectors[0].size) for _ in self._classes]
         print(f'training classifier for {len(self._classes)} classes with {vectors[0].size} features.')
+        ## count the ngram features per class
         for x, t in tqdm(zip(vectors, targets), total = len(targets)):
             cl_index = self._classes.index(t)
             for idx, val in x:
                 self._feature_freqs[cl_index][idx] += val
-            
+        
+        ## calculate the feature probability conditioned on the class and apply Laplace smoothing
         self._feature_probs = []
         for class_feature_freqs in self._feature_freqs:
             total_class_ngrams = np.sum(class_feature_freqs)
-            ### p(x_i|c_k) = 1 + count(x_i, c_k) / (sum(count(x_i, c_k)) + (len(x) * alpha)) <---- Laplace smoothing
+            ## p(x_i|c_k) = 1 + count(x_i, c_k) / (sum_over_i(count(x_i, c_k)) + (len(x) * alpha)) <---- Laplace smoothing
             class_feature_probs = class_feature_freqs/(total_class_ngrams + (len(class_feature_freqs)* self._alpha))
             self._feature_probs.append(class_feature_probs)
 
+        # calculate the class probabilities p(c_k)
         self._class_probs = np.array([self._class_counts[cl]/len(targets) for cl in self._classes])
         print('training finished!')
 

@@ -50,13 +50,16 @@ def build_feature_vector(text, n_gram_lookup, n_gram_window = (1,5)):
     unknown_ngrams = 0
     all_ngrams_present = []
     count_n_grams = defaultdict(int)
+    ## collect all ngrams
     for i in range(*n_gram_window):
         all_ngrams_present += get_n_grams(clean_text(text), i)
+    ## count the ngrams
     for ngram in all_ngrams_present:
         if ngram in n_gram_lookup:
             count_n_grams[n_gram_lookup[ngram]] += 1
         else:
             unknown_ngrams += 1
+    ## unknown ngrams are ignored
     if unknown_ngrams > 0:
         pass
         #print(f'warning: {unknown_ngrams} unknown ngrams detected')
