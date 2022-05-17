@@ -12,6 +12,7 @@ To try out the code follow these steps:
 
 ```
 python3 -m venv language_ident_env
+source language_ident_env/bin/activate
 ```
 
 2. install the required packages to view the notebook 
