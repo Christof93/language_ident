@@ -11,7 +11,7 @@ To try out the code follow these steps:
 1. set up a python 3 virtual environment 
 
 ```
-python3 -m venv
+python3 -m venv language_ident_env
 ```
 
 2. install the required packages to view the notebook 
