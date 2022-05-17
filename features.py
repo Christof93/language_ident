@@ -2,17 +2,24 @@ from collections import defaultdict, abc
 import numpy as np
 
 class sparse_vector(abc.Iterable):
+    """
+    A simple sparse vector representation as list of tuples. 
+    With a size argument for true size.
+    """
     def __init__(self, index_value_tuples, size) -> None:
         self.size = size
-        self.non_zero_values = index_value_tuples
+        self._non_zero_values = index_value_tuples
 
     def __repr__(self) -> str:
-        return str(self.non_zero_values)
+        return str(self._non_zero_values)
 
     def __iter__(self):
-        return iter(self.non_zero_values)
+        return iter(self._non_zero_values)
 
 def get_n_grams(collection, n):
+    """
+    build n-gram tuples over a collection of elements.
+    """
     collections = [collection[i:] for i in range(n)]
     ngrams = []
     for ngram in zip(*collections):
@@ -20,6 +27,9 @@ def get_n_grams(collection, n):
     return ngrams
 
 def collect_all_n_grams(all_texts):
+    """
+    Computes all the distinct ngrams for a collection of textual strings, and indexes them.
+    """
     distinct_n_grams = set()
     for text in all_texts:
         for i in range(1,5):
@@ -28,13 +38,19 @@ def collect_all_n_grams(all_texts):
     return look_up    
 
 def clean_text(text):
+    """
+    filter non-alphabetic content
+    """
     return [char for char in text if char.isalpha() or char == ' ']
 
-def build_feature_vector(text, n_gram_lookup, n_grams = (1,5)):
+def build_feature_vector(text, n_gram_lookup, n_gram_window = (1,5)):
+    """
+    Return a sparse vector with n-gram counts for a specific text
+    """
     unknown_ngrams = 0
     all_ngrams_present = []
     count_n_grams = defaultdict(int)
-    for i in range(*n_grams):
+    for i in range(*n_gram_window):
         all_ngrams_present += get_n_grams(clean_text(text), i)
     for ngram in all_ngrams_present:
         if ngram in n_gram_lookup:

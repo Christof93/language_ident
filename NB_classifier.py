@@ -1,11 +1,16 @@
+import pickle
+
 import numpy as np
 from tqdm import tqdm
-from collections import defaultdict
+
 from features import sparse_vector
 
+
 class MNB_classfier():
+    """
+    An implementation of a multinomial Naive Bayes classifier.
+    """
     def __init__(self):
-        self.freqs = []
         self._alpha = 1
 
     def train(self, vectors: list, targets: list) -> None:
@@ -49,4 +54,18 @@ class MNB_classfier():
             predictions.append(pred)
         return predictions
 
+    def to_file(self, file_name) -> None:
+        with open(file_name, 'wb') as outfile:
+            pickle.dump({
+                'feature_probs': self._feature_probs,
+                'class_probs': self._class_probs,
+                'classes':self._classes
+            }, outfile, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def from_file(self, file_name) -> None:
+        with open(file_name, 'rb') as infile:
+            dump = pickle.load(infile)
+            self._feature_probs = dump['feature_probs']
+            self._class_probs = dump['class_probs']
+            self._classes = dump['classes']
 
